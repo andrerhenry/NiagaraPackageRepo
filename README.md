@@ -1,2 +1,2 @@
 # NiagaraPackageRepo
-Code the Niagara package repositrory server
+Code supporting the Niagara package repositrory server
