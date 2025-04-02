@@ -3,23 +3,25 @@ import json
 
 def create_module_manifest():
     list_of_files = os.listdir(os.getcwd())
-
-
+    
     manifest ={}
-    n= 0
-    #manifest["info"] = []
     for file in list_of_files:
-        name = file.split('.')[0]
-        extention = file.split('.')[-1]
+        extension = file.split('.')[-1]
+        module_type = (file.split('.')[0]).split('-')[-1]
+        name = (file.split('.')[0]).split('-')[0]
 
-        if extention == "txt":
-            info = {"file": file, "extention": extention}
-            manifest[name] = {"file": file, "extention": extention}
+        print(name, module_type, extension)
+
+        if extension == "jar":
+            info = {"file": file, "extention": extension}
+            manifest[name] = {"file": file,"type": module_type, "extension": extension}
 
 
     with open("manifest.json", "w") as file:
         file.write(json.dumps(manifest))
 
+
+def read_module_manifest():
     with open("manifest.json", "r") as file:
         data = json.loads(file.read())
         print(data["temp"]["file"])
