@@ -6,6 +6,7 @@ def create_module_manifest():
 
 
     manifest ={}
+    n= 0
     #manifest["info"] = []
     for file in list_of_files:
         name = file.split('.')[0]
@@ -14,17 +15,14 @@ def create_module_manifest():
         if extention == "txt":
             info = {"file": file, "extention": extention}
             manifest[name] = {"file": file, "extention": extention}
-            print(manifest)
+
 
     with open("manifest.json", "w") as file:
         file.write(json.dumps(manifest))
-        print(type(json.dumps(manifest)))
 
     with open("manifest.json", "r") as file:
-
         data = json.loads(file.read())
-        print(type(data))
-        print(data)
+        print(data["temp"]["file"])
 
 
 
