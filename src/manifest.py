@@ -25,8 +25,6 @@ def create_module_manifest():
 
 
 def read_module_manifest():
-
-def read_module_manifest():
     with open("manifest.json", "r") as file:
         data = json.loads(file.read())
         print(data["temp"]["file"])
