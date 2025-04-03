@@ -10,9 +10,6 @@ def create_module_manifest():
         extension = file.split('.')[-1]
         module_type = (file.split('.')[0]).split('-')[-1]
         name = (file.split('.')[0]).split('-')[0]
-        extension = file.split('.')[-1]
-        module_type = (file.split('.')[0]).split('-')[-1]
-        name = (file.split('.')[0]).split('-')[0]
 
         if extension == "jar":
             info = {"file": file, "extention": extension}
