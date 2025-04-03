@@ -2,15 +2,15 @@ import os
 import json
 from pathlib import Path
 
-def create_module_manifest(path=Path | None) -> None:
+def create_module_manifest(path: Path | None = None) -> None:
     """Creates a manifest in json format of the pakcages at provided directory.
     If no directory is provided, it will default the the curre directory. 
 
     Args:
         path (Path, optional): Path to direcotry. Defaults to current working direcotry.
-    """    
+    """ 
     if path:
-        list_of_files = path
+        list_of_files = os.listdir(path)
     else:
         list_of_files = os.listdir(os.getcwd())
     
