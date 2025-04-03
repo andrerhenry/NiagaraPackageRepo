@@ -8,12 +8,17 @@ def create_module_manifest():
     manifest ={}
     for file in list_of_files:
         extension = file.split('.')[-1]
-        module_type = (file.split('.')[0]).split('-')[-1]
+        module_profile = (file.split('.')[0]).split('-')[-1]
         name = (file.split('.')[0]).split('-')[0]
 
         if extension == "jar":
-            info = {"file": file, "extention": extension}
-            manifest[name] = {"file": file,"type": module_type, "extension": extension}
+            if name not in manifest:
+                manifest[name] = {"file": [file], "profile": [module_profile]}
+            elif name in manifest.keys():
+                manifest[name]["file"].append(file)
+                manifest[name]["profile"].append(module_profile)
+                
+
 
 
     with open("manifest.json", "w") as file:
