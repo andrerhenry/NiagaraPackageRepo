@@ -22,10 +22,10 @@ def create_module_manifest(path: Path | None = None) -> None:
 
         if extension == "jar":
             if name not in manifest:
-                manifest[name] = {"file": [file], "profile": [module_profile]}
+                manifest[name] = {"files": [file], "runtimeProfiles": [module_profile]}
             elif name in manifest.keys():
-                manifest[name]["file"].append(file)
-                manifest[name]["profile"].append(module_profile)
+                manifest[name]["files"].append(file)
+                manifest[name]["runtimeProfiles"].append(module_profile)
 
     with open("manifest.json", "w") as file:
         manifest = dict(sorted(manifest.items()))
