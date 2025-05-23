@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-from niagara_repo.upload_handeling import store_module
+from niagara_repo.upload_handeling import store_module, get_module_info
 
 
 def test_save_module_to_repo(tmp_module_dir):
@@ -22,3 +22,18 @@ def test_store_module(base_dir, set_working_dir, tmp_module_dir):
     assert (target_dir/'testModule.jar').exists()
     assert (target_dir/'testModule.jar').is_file()
 
+def test_get_module_info_data_type():
+    base_dir = (Path(__file__).parent)
+    file_path = base_dir/'resources/modules/4.12'
+    module_name = 'vykonPro-doc.jar'
+    data = get_module_info(file_path, module_name)
+    assert  isinstance(data, dict)
+
+def test_get_module_info_data():
+    base_dir = (Path(__file__).parent)
+    file_path = base_dir/'resources/modules/4.12'
+    module_name = 'vykonPro-doc.jar'
+    data = get_module_info(file_path, module_name)
+    assert data['name'] == 'vykonPro-doc'
+    assert data['vendor']== "VYKON"
+    assert data['vendorVersion'] == "4.12.0.16" 

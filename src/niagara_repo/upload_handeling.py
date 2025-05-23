@@ -12,21 +12,32 @@ def store_module(module_name: str, destination_dir: PathLike) -> None:
     module_path = base_path/'uploads'/module_name
     shutil.copy(module_path, destination_dir)
 
-def get_module_info():
+def test_get_module_info():
     base_dir = (Path(__file__).parent.parent.parent)
     file_path = base_dir/"tests/resources/modules/4.12"
-    with ZipFile(file_path/"vykonPro-doc.jar", 'r') as folder:
-        file = folder.open("META-INF/module.xml", "r")
-        return ET.parse(file)
+    module_name = "vykonPro-doc.jar"
+    return get_module_info(file_path, module_name)
 
-def parse_xml_data():
-    ET.parse()
+
+def get_module_info(file_path: PathLike, module_name: str) -> dict[str, str]:
+    """Parses the .jar files module.xml from the META-INF and return the meta data
+
+    Args:
+        file_path (PathLike): Path to module.
+        module_name (str): name of module with extention.
+
+    Returns:
+        dict[str, str]: Module meta Data
+    """
+    with ZipFile(file_path/module_name, 'r') as folder:
+        file = folder.open("META-INF/module.xml", "r")
+        tree =  ET.parse(file)
+        root = tree.getroot()
+        return root.attrib
+
 
 if __name__ == "__main__":
-    tree =  get_module_info()
-    root = tree.getroot()
-    print(root)
-    print(root.attrib)
+    print(test_get_module_info())
 
 
     # for element in root.iter('module'):
