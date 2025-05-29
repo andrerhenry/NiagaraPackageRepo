@@ -6,6 +6,20 @@ from os import PathLike
 from zipfile import ZipFile
 import xml.etree.ElementTree as ET
 
+ALLOWED_EXTENSIONS = 'jar'
+
+def check_file_type(filename:str)->bool:
+    """Checks the file type and confirms the file extention is approved type.
+
+    Args:
+        filename (str): Name of file with extention.
+
+    Returns:
+        bool: True if allowed extension.
+    """    
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def store_module(module_name: str, destination_dir: PathLike) -> None:
     base_path = Path()  
@@ -17,6 +31,8 @@ def test_get_module_info():
     file_path = base_dir/"tests/resources/modules/4.12"
     module_name = "vykonPro-doc.jar"
     return get_module_info(file_path, module_name)
+
+
 
 
 def get_module_info(file_path: PathLike, module_name: str) -> dict[str, str]:
@@ -34,6 +50,8 @@ def get_module_info(file_path: PathLike, module_name: str) -> dict[str, str]:
         tree =  ET.parse(file)
         root = tree.getroot()
         return root.attrib
+
+
 
 
 if __name__ == "__main__":
