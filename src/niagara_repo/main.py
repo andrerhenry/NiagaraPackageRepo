@@ -22,11 +22,6 @@ def setup_app():
     @app.route('/api/uploads', methods=['POST'] )
     def upload_file():
 
-        print('\n')
-        print('in upload file')
-        print(request)
-        print(repr(request.files))
-
         # check if the post request has the file part
         if 'file' not in request.files:
             print('No file part')

@@ -1,6 +1,5 @@
 import pytest
 import shutil
-import os
 
 from flask import Flask, jsonify
 from pathlib import Path
@@ -11,18 +10,13 @@ from niagara_repo.main import setup_app
 def setup_test_server(base_dir):
     ALLOWED_EXTENSIONS = {'jar', 'txt'} # Allow Test files for testing 
 
-    def alt_app_setup():
-        UPLOAD_FOLDER = base_dir/'uploads'
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-        app = Flask(__name__)
-        app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
-        app.config['SECRET_KEY'] = os.urandom(32)
-        app.config['TESTING'] = True
-    
     app = setup_app()
+    # Override configuration for testing
     app.config['TESTING'] = True
+    app.config['UPLOAD_FOLDER'] = base_dir/'uploads'
 
+
+    # Check test server is working
     @app.route("/ping")
     def ping():
         return jsonify({"message": "pong"})
