@@ -1,13 +1,46 @@
 import pytest
 import shutil
+import os
 
+from flask import Flask, jsonify
 from pathlib import Path
+
+from niagara_repo.main import setup_app
+
+@pytest.fixture(scope='session')
+def setup_test_server(base_dir):
+    ALLOWED_EXTENSIONS = {'jar', 'txt'} # Allow Test files for testing 
+
+    def alt_app_setup():
+        UPLOAD_FOLDER = base_dir/'uploads'
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+        app = Flask(__name__)
+        app.config['UPLOAD_FOLDER'] = str(UPLOAD_FOLDER)
+        app.config['SECRET_KEY'] = os.urandom(32)
+        app.config['TESTING'] = True
+    
+    app = setup_app()
+    app.config['TESTING'] = True
+
+    @app.route("/ping")
+    def ping():
+        return jsonify({"message": "pong"})
+
+
+    # Move this to own resource?
+    #from niagara_repo.main import upload_file
+    app.test_client()
+    with app.test_client() as client:
+        yield client
+
+
 
 
 @pytest.fixture(scope='session')
 def base_dir(tmp_path_factory):
-    base_path = tmp_path_factory.mktemp('root/')
-    module_path = Path(base_path/'niagara'/'4.12/')
+    base_path = tmp_path_factory.mktemp('root')
+    module_path = Path(base_path/'niagara'/'4.12')
     module_path.mkdir(parents=True)
 
     uploads_dirs = Path(base_path/'uploads/')
