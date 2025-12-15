@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from flask import Flask, flash, request, redirect, url_for, send_file, jsonify
 from werkzeug.utils import secure_filename
+from typing import Any
 
 ALLOWED_EXTENSIONS = {'jar', 'txt'}
 
@@ -20,7 +21,7 @@ def setup_app():
 
 
     @app.route('/api/uploads', methods=['POST'] )
-    def upload_file():
+    def upload_file() -> Any:
 
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -29,30 +30,36 @@ def setup_app():
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
-        if file.filename == '':
+
+        if file is None or file.filename == '':
             print('No selected file')
             return redirect(request.url)
+        
         if file and allowed_file(file.filename):
             print('file is in allowed files:', file.filename)
-
-            filename = secure_filename(file.filename)
-            save_path = Path(app.config['UPLOAD_FOLDER'])/filename
-            print('file save path:', save_path)
-            file.save(save_path)
+            
+            if file.filename:
+                filename = secure_filename(file.filename)
+                save_path = Path(app.config['UPLOAD_FOLDER'])/filename
+                print('file save path:', save_path)
+                file.save(save_path)
             print('file saved sucessfully:', save_path.exists())
             return jsonify({"message": "Data received successfully"}), 200
 
     @app.route('/niagara/4.14/<package_name>', methods=['GET'])
-    def get_package(package_name:str):
+    def get_package(package_name:str) ->Any:
         return print(f'Attempting to get: {package_name}')
 
     return app
 
 
 
-def allowed_file(filename:str):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename:str | None) -> bool:
+    if filename:
+        return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    if not filename:
+        return False
 
 
 
