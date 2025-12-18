@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
-from niagara_repo.upload_handeling import store_module, get_module_info
-
+import zipfile
+from niagara_repo.upload_handeling import store_module, get_module_info, verify_jar_signature
 
 def test_save_module_to_repo(tmp_module_dir):
     module_dir = tmp_module_dir
@@ -35,5 +35,11 @@ def test_get_module_info_data():
     module_name = 'vykonPro-doc.jar'
     data = get_module_info(file_path, module_name)
     assert data['name'] == 'vykonPro-doc'
-    assert data['vendor']== "VYKON"
+    assert data['vendor']== 'VYKON'
     assert data['vendorVersion'] == "4.12.0.16" 
+
+def test_verify_jar_signature(base_dir, set_working_dir, simuluate_upload):
+    getting_path = base_dir
+    module_path = getting_path/'uploads/vykonPro-doc.jar'
+    assert verify_jar_signature(module_path) == True
+

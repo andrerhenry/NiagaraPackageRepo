@@ -1,5 +1,5 @@
 import shutil
-
+import subprocess
 
 from pathlib import Path
 from os import PathLike
@@ -33,8 +33,6 @@ def test_get_module_info():
     return get_module_info(file_path, module_name)
 
 
-
-
 def get_module_info(file_path: PathLike, module_name: str) -> dict[str, str]:
     """Parses the .jar files module.xml from the META-INF and return the meta data
 
@@ -45,13 +43,30 @@ def get_module_info(file_path: PathLike, module_name: str) -> dict[str, str]:
     Returns:
         dict[str, str]: Module meta Data
     """
+    file_path = Path(file_path)
     with ZipFile(file_path/module_name, 'r') as folder:
         file = folder.open("META-INF/module.xml", "r")
         tree =  ET.parse(file)
         root = tree.getroot()
         return root.attrib
 
+def  verify_jar_signature(module_name: str) -> bool:
+    """Calls Jarsigner tool to verify module signature
 
+    Args:
+        module_name (str): Name of the .jar module to be checked
+
+    Returns:
+        bool: Verification confirmation
+    """
+    output = subprocess.run(['jarsigner', '-verify', module_name], capture_output=True, text=True)
+
+    if "jar verified." in output.stdout:
+        jar_verication = True
+        print('Pass')
+    else:
+        jar_verication = False
+    return jar_verication
 
 
 if __name__ == "__main__":
